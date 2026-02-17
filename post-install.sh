@@ -65,11 +65,19 @@ else
     echo "  ⚠️ Whisper 未安装，如需语音转录请运行: brew install openai-whisper"
 fi
 
+# 7. 安装 Web 管理界面
+echo "🌐 安装 Web 管理界面..."
+if [ -f "$CLAWX_DIR/scripts/install-manager.sh" ]; then
+    bash "$CLAWX_DIR/scripts/install-manager.sh"
+    echo "  ✅ Web 管理界面已安装"
+fi
+
 echo ""
 echo "🎉 clawX 配置完成！"
 echo ""
 echo "下一步："
 echo "  1. 编辑 ~/.openclaw/workspace/MEMORY.md 填写你的信息"
 echo "  2. 运行 openclaw gateway start 启动服务"
-echo "  3. 查看文档: cat ~/.openclaw/workspace/docs/README.md"
+echo "  3. 访问 http://localhost:19999 使用 Web 管理界面"
+echo "  4. 查看文档: cat ~/.openclaw/workspace/docs/README.md"
 echo ""
