@@ -5,7 +5,7 @@ const { exec } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 
-const PORT = 19999;
+const PORT = 8080;
 const HOST = '0.0.0.0';  // 允许局域网访问
 const CONFIG_DIR = process.env.HOME + '/.openclaw';
 const BACKUP_DIR = CONFIG_DIR + '/config-backups';
