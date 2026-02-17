@@ -88,23 +88,12 @@ fi
 echo ""
 echo -e "${BLUE}🦞${NC} 安装 OpenClaw..."
 
-# 检查是否有 root 权限
-if [ "$EUID" -eq 0 ]; then
-    # root 用户
-    if command -v openclaw &> /dev/null; then
-        echo -e "  OpenClaw 已安装，更新中..."
-        npm update -g openclaw
-    else
-        npm install -g openclaw
-    fi
+# 尝试不用 sudo，用 --unsafe-perm
+if command -v openclaw &> /dev/null; then
+    echo -e "  OpenClaw 已安装，更新中..."
+    npm update -g openclaw --unsafe-perm=true --allow-root 2>/dev/null || npm update -g openclaw
 else
-    # 非 root 用户 - 使用 sudo
-    if command -v openclaw &> /dev/null; then
-        echo -e "  OpenClaw 已安装，更新中..."
-        sudo npm update -g openclaw 2>/dev/null || npm update -g openclaw --unsafe-perm=true
-    else
-        sudo npm install -g openclaw 2>/dev/null || npm install -g openclaw --unsafe-perm=true
-    fi
+    npm install -g openclaw --unsafe-perm=true --allow-root 2>/dev/null || npm install -g openclaw
 fi
 echo -e "  ${GREEN}✓${NC} OpenClaw 安装完成"
 
