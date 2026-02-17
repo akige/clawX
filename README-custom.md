@@ -6,7 +6,7 @@
 
 | | 官方 OpenClaw | clawX (本项目) |
 |---|---|---|
-| 仓库 | github.com/openclaw/openclaw | github.com/akige/openclaw |
+| 仓库 | github.com/openclaw/openclaw | github.com/akige/clawX |
 | 分支 | main | custom |
 | 同步 | - | 通过 upstream 合并官方更新 |
 
