@@ -87,19 +87,39 @@ fi
 # ============ 安装 OpenClaw ============
 echo ""
 echo -e "${BLUE}🦞${NC} 安装 OpenClaw..."
-if command -v openclaw &> /dev/null; then
-    echo -e "  OpenClaw 已安装，更新中..."
-    # 需要 sudo 权限
-    sudo npm update -g openclaw 2>/dev/null || npm update -g openclaw
+
+# 检查是否有 root 权限
+if [ "$EUID" -eq 0 ]; then
+    # root 用户
+    if command -v openclaw &> /dev/null; then
+        echo -e "  OpenClaw 已安装，更新中..."
+        npm update -g openclaw
+    else
+        npm install -g openclaw
+    fi
 else
-    npm install -g openclaw
+    # 非 root 用户 - 使用 sudo
+    if command -v openclaw &> /dev/null; then
+        echo -e "  OpenClaw 已安装，更新中..."
+        sudo npm update -g openclaw 2>/dev/null || npm update -g openclaw --unsafe-perm=true
+    else
+        sudo npm install -g openclaw 2>/dev/null || npm install -g openclaw --unsafe-perm=true
+    fi
 fi
 echo -e "  ${GREEN}✓${NC} OpenClaw 安装完成"
+
+# ============ 获取用户目录 ============
+# 记录原始用户目录（不是 sudo 后的 /root）
+if [ -n "$SUDO_USER" ]; then
+    USER_HOME=$(getent passwd "$SUDO_USER" | cut -d: -f6)
+else
+    USER_HOME="$HOME"
+fi
 
 # ============ 克隆/更新 clawX 配置 ============
 echo ""
 echo -e "${BLUE}📥${NC} 准备 clawX 配置..."
-CLAWX_DIR="$HOME/.openclaw/clawX"
+CLAWX_DIR="$USER_HOME/.openclaw/clawX"
 
 # 直接删除旧版本，重新克隆最新
 if [ -d "$CLAWX_DIR" ]; then
@@ -117,5 +137,9 @@ echo -e "${BLUE}⚙️${NC} 应用 clawX 配置..."
 chmod +x "$CLAWX_DIR/post-install.sh"
 echo ""
 
-# 运行交互式配置
-bash "$CLAWX_DIR/post-install.sh"
+# 切换回原始用户运行配置脚本
+if [ -n "$SUDO_USER" ]; then
+    sudo -u "$SUDO_USER" bash "$CLAWX_DIR/post-install.sh"
+else
+    bash "$CLAWX_DIR/post-install.sh"
+fi
