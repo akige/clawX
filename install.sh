@@ -8,7 +8,44 @@ echo "🦞 clawX 安装脚本"
 echo "================"
 echo ""
 
-# 检查系统
+# 检查并安装 Node.js
+install_node() {
+    echo "📦 安装 Node.js 22..."
+    
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        # macOS
+        if command -v brew &> /dev/null; then
+            brew install node@22
+        else
+            echo "❌ 请先安装 Homebrew: https://brew.sh"
+            exit 1
+        fi
+    elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
+        # Linux
+        if command -v apt-get &> /dev/null; then
+            # Ubuntu/Debian
+            curl -fsSL https://deb.nodesource.com/setup_22.x | bash -e
+            apt-get install -y nodejs
+        elif command -v yum &> /dev/null; then
+            # CentOS/RHEL
+            curl -fsSL https://rpm.nodesource.com/setup_22.x | bash -e
+            yum install -y nodejs
+        elif command -v apk &> /dev/null; then
+            # Alpine
+            apk add --no-cache nodejs npm
+        else
+            echo "❌ 不支持的 Linux 发行版"
+            exit 1
+        fi
+    else
+        echo "❌ 暂不支持此操作系统: $OSTYPE"
+        exit 1
+    fi
+    
+    echo "✅ Node.js 安装完成"
+}
+
+# 检测系统
 if [[ "$OSTYPE" == "darwin"* ]]; then
     OS="macos"
 elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
@@ -30,14 +67,12 @@ if command -v node &> /dev/null; then
     # 检查版本是否 >= 22
     NODE_MAJOR=$(echo $NODE_VERSION | cut -d'.' -f1 | tr -d 'v')
     if [ "$NODE_MAJOR" -lt 22 ]; then
-        echo "  ⚠️ Node.js 版本过低，需要 22+"
-        echo "  请运行: brew install node@22 或手动升级"
-        exit 1
+        echo "  ⚠️ Node.js 版本过低 (需要 22+)"
+        install_node
     fi
 else
     echo "  ❌ Node.js 未安装"
-    echo "  请先安装 Node.js 22+: https://nodejs.org/"
-    exit 1
+    install_node
 fi
 
 # 2. 检查并安装 pnpm
@@ -67,9 +102,9 @@ echo ""
 echo "📥 克隆 clawX 配置..."
 CLAWX_DIR="$HOME/.openclaw/clawX"
 if [ -d "$CLAWX_DIR" ]; then
-    echo " clawX 已存在，更新中..."
+    echo "  clawX 已存在，更新中..."
     cd "$CLAWX_DIR"
-    git pull origin main
+    git pull origin main 2>/dev/null || true
 else
     git clone https://github.com/akige/clawX.git "$CLAWX_DIR"
 fi
@@ -91,6 +126,7 @@ echo "下一步："
 echo "  1. 运行配置向导: openclaw onboard"
 echo "  2. 按照向导完成基础配置"
 echo "  3. 启动服务: openclaw gateway start"
+echo "  4. 访问 http://localhost:19999 使用 Web 管理界面"
 echo ""
 echo "文档位置: ~/.openclaw/workspace/docs/"
 echo ""

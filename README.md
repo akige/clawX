@@ -26,30 +26,29 @@ clawX 是基于 [OpenClaw](https://github.com/openclaw/openclaw) 的增强版本
 
 ## 安装
 
-### 快速安装
+### 一键安装（推荐）
 
 ```bash
-# 一键安装（推荐）
 curl -fsSL https://raw.githubusercontent.com/akige/clawX/main/install.sh | bash
 ```
+
+**脚本会自动安装：**
+- Node.js 22+ (如未安装)
+- pnpm
+- OpenClaw
+- clawX 配置
+- Web 管理界面
 
 ### 手动安装
 
 ```bash
-# 1. 安装依赖
-brew install node pnpm
-
-# 2. 安装 OpenClaw
-npm install -g openclaw@latest
-openclaw onboard
-
-# 3. 克隆 clawX 配置
+# 克隆配置
 git clone https://github.com/akige/clawX.git ~/.openclaw/clawX
 
-# 4. 运行安装后配置
+# 运行安装脚本
 cd ~/.openclaw/clawX
-chmod +x post-install.sh
-./post-install.sh
+chmod +x install.sh
+./install.sh
 ```
 
 ---
