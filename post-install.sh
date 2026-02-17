@@ -137,6 +137,17 @@ else
         else
             warn "Whisper 安装失败，请手动安装: pip install openai-whisper"
         fi
+    elif command -v python3 &> /dev/null; then
+        # 安装 pip 再装 whisper
+        echo "     安装 pip3..."
+        python3 -m ensurepip --upgrade 2>/dev/null || python3 -m pip install --upgrade pip 2>/dev/null
+        echo "     正在安装 Whisper..."
+        python3 -m pip install -q openai-whisper 2>/dev/null
+        if command -v whisper &> /dev/null; then
+            log "Whisper 安装成功！"
+        else
+            warn "Whisper 安装失败，请手动安装: pip3 install openai-whisper"
+        fi
     else
         echo "     请手动安装: pip install openai-whisper"
     fi
