@@ -95,14 +95,20 @@ else
 fi
 echo -e "  ${GREEN}✓${NC} OpenClaw 安装完成"
 
-# ============ 克隆 clawX 配置 ============
+# ============ 克隆/更新 clawX 配置 ============
 echo ""
-echo -e "${BLUE}📥${NC} 克隆 clawX 配置..."
+echo -e "${BLUE}📥${NC} 准备 clawX 配置..."
 CLAWX_DIR="$HOME/.openclaw/clawX"
 if [ -d "$CLAWX_DIR" ]; then
     echo -e "  clawX 已存在，更新中..."
     cd "$CLAWX_DIR"
-    git pull origin main 2>/dev/null || true
+    git fetch origin
+    # 检查远程是否有新提交
+    LOCAL=$(git rev-parse HEAD)
+    REMOTE=$(git rev-parse origin/main)
+    if [ "$LOCAL" != "$REMOTE" ]; then
+        git pull origin main --allow-unrelated-histories
+    fi
 else
     git clone https://github.com/akige/clawX.git "$CLAWX_DIR"
 fi
