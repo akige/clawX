@@ -100,18 +100,29 @@ echo ""
 echo -e "${BLUE}📥${NC} 准备 clawX 配置..."
 CLAWX_DIR="$HOME/.openclaw/clawX"
 
-# 如果目录存在，强制更新到最新版本
+# 如果目录存在，询问是否删除重建
 if [ -d "$CLAWX_DIR/.git" ]; then
-    echo -e "  clawX 已存在，更新到最新版本..."
-    cd "$CLAWX_DIR"
-    git fetch origin main
-    git checkout main
-    git reset --hard origin/main
+    echo -e "${YELLOW}⚠️${NC} 发现已安装的 clawX"
+    echo -e "   要删除旧版本重新安装吗？(y/n)${NC}"
+    read -r -n1 -p "" answer
+    echo
+    if [[ "$answer" =~ ^[Yy]$ ]] || [ -z "$answer" ]; then
+        echo -e "  删除旧版本..."
+        rm -rf "$CLAWX_DIR"
+        echo -e "  克隆新版本..."
+        git clone https://github.com/akige/clawX.git "$CLAWX_DIR"
+    else
+        echo -e "  保留旧版本，更新中..."
+        cd "$CLAWX_DIR"
+        git fetch origin main
+        git checkout main
+        git reset --hard origin/main
+    fi
 else
     echo -e "  克隆 clawX 配置..."
     git clone https://github.com/akige/clawX.git "$CLAWX_DIR"
 fi
-echo -e "  ${GREEN}✓${NC} clawX 配置已准备 (最新版本)"
+echo -e "  ${GREEN}✓${NC} clawX 配置已准备"
 
 # ============ 运行安装后配置 ============
 echo ""
