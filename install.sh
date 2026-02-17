@@ -103,8 +103,8 @@ CLAWX_DIR="$HOME/.openclaw/clawX"
 # 如果目录存在，询问是否删除重建
 if [ -d "$CLAWX_DIR/.git" ]; then
     echo -e "${YELLOW}⚠️${NC} 发现已安装的 clawX"
-    echo -e "   要删除旧版本重新安装吗？(y/n)${NC}"
-    read -r -n1 -p "" answer
+    echo -n "   要删除旧版本重新安装吗？(y/n): "
+    read answer
     echo
     if [[ "$answer" =~ ^[Yy]$ ]] || [ -z "$answer" ]; then
         echo -e "  删除旧版本..."
