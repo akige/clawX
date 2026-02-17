@@ -230,7 +230,7 @@ openclaw logs
 
 ## Web 管理界面
 
-访问：http://localhost:19999
+访问：http://localhost:8080
 
 功能：查看状态、备份/恢复配置、重启 Gateway
 
@@ -249,7 +249,7 @@ echo -e "${GREEN}🎉 clawX 安装完成！${NC}"
 echo "========================================"
 echo ""
 echo -e "${BLUE}📍${NC} 访问地址："
-echo "   Web 管理界面: ${GREEN}http://localhost:19999${NC}"
+echo "   Web 管理界面: ${GREEN}http://localhost:8080${NC}"
 echo ""
 echo -e "${BLUE}📁${NC} 重要路径："
 echo "   工作目录: ~/.openclaw/workspace/"
@@ -257,7 +257,7 @@ echo "   配置备份: ~/.openclaw/config-backups/"
 echo "   中文文档: ~/.openclaw/workspace/docs/"
 echo ""
 echo -e "${BLUE}💡${NC} 下一步："
-echo "   1. 访问 http://localhost:19999 查看状态"
+echo "   1. 访问 http://localhost:8080 查看状态"
 echo "   2. 发送消息到你的 OpenClaw"
 echo "   3. 说「记住 xxx」测试记忆功能"
 echo ""
