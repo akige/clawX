@@ -99,20 +99,19 @@ echo -e "  ${GREEN}✓${NC} OpenClaw 安装完成"
 echo ""
 echo -e "${BLUE}📥${NC} 准备 clawX 配置..."
 CLAWX_DIR="$HOME/.openclaw/clawX"
-if [ -d "$CLAWX_DIR" ]; then
-    echo -e "  clawX 已存在，更新中..."
+
+# 如果目录存在，强制更新到最新版本
+if [ -d "$CLAWX_DIR/.git" ]; then
+    echo -e "  clawX 已存在，更新到最新版本..."
     cd "$CLAWX_DIR"
-    git fetch origin
-    # 检查远程是否有新提交
-    LOCAL=$(git rev-parse HEAD)
-    REMOTE=$(git rev-parse origin/main)
-    if [ "$LOCAL" != "$REMOTE" ]; then
-        git pull origin main --allow-unrelated-histories
-    fi
+    git fetch origin main
+    git checkout main
+    git reset --hard origin/main
 else
+    echo -e "  克隆 clawX 配置..."
     git clone https://github.com/akige/clawX.git "$CLAWX_DIR"
 fi
-echo -e "  ${GREEN}✓${NC} clawX 配置已准备"
+echo -e "  ${GREEN}✓${NC} clawX 配置已准备 (最新版本)"
 
 # ============ 运行安装后配置 ============
 echo ""
