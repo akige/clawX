@@ -6,6 +6,7 @@ const fs = require('fs');
 const path = require('path');
 
 const PORT = 19999;
+const HOST = '0.0.0.0';  // 允许局域网访问
 const CONFIG_DIR = process.env.HOME + '/.openclaw';
 const BACKUP_DIR = CONFIG_DIR + '/config-backups';
 const WORKSPACE_DIR = CONFIG_DIR + '/workspace';
@@ -184,6 +185,6 @@ app.get('/api/status', async (req, res) => {
 });
 
 // Start server
-app.listen(PORT, () => {
-    console.log(`🦞 clawX Manager running at http://localhost:${PORT}`);
+app.listen(PORT, HOST, () => {
+    console.log(`🦞 clawX Manager running at http://${HOST}:${PORT}`);
 });
