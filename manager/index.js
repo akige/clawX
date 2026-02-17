@@ -30,7 +30,7 @@ app.get('/api/configs', async (req, res) => {
     try {
         const configs = [
             { id: 'openclaw.json', name: '主配置', desc: 'OpenClaw 核心配置文件', path: CONFIG_DIR + '/openclaw.json' },
-            { id: 'agent-config', name: 'Agent配置', desc: 'Agent 运行时配置', path: CONFIG_DIR + '/agents/main/agent/config.yaml' },
+            { id: 'agent-config', name: 'Agent配置', desc: 'Agent 运行时配置', path: CONFIG_DIR + '/agents/main/agent/models.json' },
             { id: 'workspace', name: '工作空间', desc: '文档和记忆系统', path: WORKSPACE_DIR }
         ];
         
