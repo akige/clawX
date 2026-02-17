@@ -156,10 +156,21 @@ fi
 echo ""
 info "检查 OpenClaw 配置..."
 
-# 检查配置文件是否存在且非空
 CONFIG_FILE="$HOME/.openclaw/openclaw.json"
-if [ -f "$CONFIG_FILE" ] && [ -s "$CONFIG_FILE" ]; then
-    log "OpenClaw 已配置"
+
+# 检查是否有有效的 AI provider 配置
+has_provider() {
+    if [ -f "$CONFIG_FILE" ] && grep -q '"providers"' "$CONFIG_FILE" 2>/dev/null; then
+        # 检查是否配置了有效的 provider
+        local count=$(grep -c '"anthropic\|"openai\|"azure' "$CONFIG_FILE" 2>/dev/null || echo "0")
+        [ "$count" -gt 0 ]
+        return $?
+    fi
+    return 1
+}
+
+if has_provider; then
+    log "OpenClaw 已配置 AI Provider"
     
     # 9. 启动 Gateway
     echo ""
@@ -173,7 +184,7 @@ if [ -f "$CONFIG_FILE" ] && [ -s "$CONFIG_FILE" ]; then
         warn "Gateway 启动可能有问题"
     fi
 else
-    warn "OpenClaw 尚未配置"
+    warn "OpenClaw 尚未配置 AI Provider"
     echo ""
     echo "========================================"
     echo "🚀 即将启动配置向导..."
