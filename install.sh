@@ -89,7 +89,8 @@ echo ""
 echo -e "${BLUE}🦞${NC} 安装 OpenClaw..."
 if command -v openclaw &> /dev/null; then
     echo -e "  OpenClaw 已安装，更新中..."
-    npm update -g openclaw
+    # 需要 sudo 权限
+    sudo npm update -g openclaw 2>/dev/null || npm update -g openclaw
 else
     npm install -g openclaw
 fi
