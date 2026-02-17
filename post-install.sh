@@ -195,11 +195,14 @@ else
     echo "  2. 配置消息渠道 (Telegram/Discord等)"
     echo "  3. 设置你的第一个 Agent"
     echo ""
-    echo -ne "${YELLOW}按回车开始配置（Ctrl+C 取消）...${NC}"
-    read -r
+    echo -e "${YELLOW}请手动运行配置向导: openclaw onboard${NC}"
     echo ""
-    
-    openclaw onboard
+    echo "配置向导会帮助你："
+    echo "  1. 登录 AI 提供商 (Anthropic/OpenAI)"
+    echo "  2. 配置消息渠道 (Telegram/Discord等)"
+    echo "  3. 设置你的第一个 Agent"
+    echo ""
+    echo "完成后运行 'openclaw gateway start' 启动服务"
 fi
 
 # 10. 创建 CLAUDE.md 快速参考

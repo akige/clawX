@@ -29,6 +29,15 @@ fi
 
 echo -e "${BLUE}📋${NC} 检测到系统: $OS"
 
+# ============ 获取用户信息 (sudo 时) ============
+if [ -n "$SUDO_USER" ]; then
+    USER_HOME=$(getent passwd "$SUDO_USER" | cut -d: -f6)
+    SUDO_CMD="sudo -u $SUDO_USER"
+else
+    USER_HOME="$HOME"
+    SUDO_CMD=""
+fi
+
 # ============ 安装 Node.js ============
 echo ""
 echo -e "${BLUE}📦${NC} 检查 Node.js..."
@@ -87,30 +96,19 @@ fi
 # ============ 安装 OpenClaw ============
 echo ""
 echo -e "${BLUE}🦞${NC} 安装 OpenClaw..."
-
-# 尝试不用 sudo，用 --unsafe-perm
 if command -v openclaw &> /dev/null; then
     echo -e "  OpenClaw 已安装，更新中..."
-    npm update -g openclaw --unsafe-perm=true --allow-root 2>/dev/null || npm update -g openclaw
+    npm update -g openclaw
 else
-    npm install -g openclaw --unsafe-perm=true --allow-root 2>/dev/null || npm install -g openclaw
+    npm install -g openclaw
 fi
 echo -e "  ${GREEN}✓${NC} OpenClaw 安装完成"
 
-# ============ 获取用户目录 ============
-# 记录原始用户目录（不是 sudo 后的 /root）
-if [ -n "$SUDO_USER" ]; then
-    USER_HOME=$(getent passwd "$SUDO_USER" | cut -d: -f6)
-else
-    USER_HOME="$HOME"
-fi
-
-# ============ 克隆/更新 clawX 配置 ============
+# ============ 克隆 clawX 到用户目录 ============
 echo ""
 echo -e "${BLUE}📥${NC} 准备 clawX 配置..."
 CLAWX_DIR="$USER_HOME/.openclaw/clawX"
 
-# 直接删除旧版本，重新克隆最新
 if [ -d "$CLAWX_DIR" ]; then
     echo -e "  删除旧版本..."
     rm -rf "$CLAWX_DIR"
@@ -118,17 +116,16 @@ fi
 
 echo -e "  克隆最新版本..."
 git clone https://github.com/akige/clawX.git "$CLAWX_DIR"
-echo -e "  ${GREEN}✓${NC} clawX 配置已准备 (最新版本)"
+echo -e "  ${GREEN}✓${NC} clawX 配置已准备"
 
 # ============ 运行安装后配置 ============
 echo ""
 echo -e "${BLUE}⚙️${NC} 应用 clawX 配置..."
 chmod +x "$CLAWX_DIR/post-install.sh"
-echo ""
 
-# 切换回原始用户运行配置脚本
+# 以用户身份运行配置脚本
 if [ -n "$SUDO_USER" ]; then
-    sudo -u "$SUDO_USER" bash "$CLAWX_DIR/post-install.sh"
+    sudo -u "$SUDO_USER" bash -c "export HOME=$USER_HOME; cd $USER_HOME; bash $CLAWX_DIR/post-install.sh"
 else
     bash "$CLAWX_DIR/post-install.sh"
 fi
